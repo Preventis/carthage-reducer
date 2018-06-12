@@ -1,0 +1,11 @@
+{
+  "no-use-binaries": true,
+  "cache-builds": true,
+  "use-ssh": false,
+  "cartfiles": [
+    "./App/Cartfile",
+    "./Frameworks/InternalFrameworkA/Cartfile",
+    "./Frameworks/InternalFrameworkB/Cartfile",
+    "./Frameworks/InternalFrameworkC/Cartfile"
+  ]
+}
