@@ -19,3 +19,7 @@ This small script collects all the dependency information from all specified fra
 Very simple, just invoke `python3 carthage.py`.
 
 Some options can be specified in `CarthageConfig.json`.
+
+## Hint
+
+In order to overcome the pain with adding each framework, which is used, to the base apps, we use `carthage-copy-frameworks`. [lvillani](https://github.com/lvillani) did an awesome job, [lvillani/carthage-copy-frameworks](https://github.com/lvillani/carthage-copy-frameworks).
