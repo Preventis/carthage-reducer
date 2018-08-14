@@ -14,6 +14,12 @@ We are using a monorepo and one big workspace to handle different apps and frame
 
 This small script collects all the dependency information from all specified framework projects, writes one final Cartfile for the project / monospace as a whole, and invokes Carthage with your desired `CarthageConfig.json`.
 
+# Installation
+
+```
+brew install Preventis/tap/carthage-reducer
+```
+
 # Usage
 
 Very simple, just invoke `python3 carthage.py`.
