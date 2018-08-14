@@ -67,8 +67,8 @@ print("...no conflicts found!")
 # 3. writing overall `Cartfile`
 print("3. writing overall `Cartfile`")
 with open("./Cartfile", "w") as overall_cartfile:
-    for dep in list(sorted(dependencies.values(), key=lambda dep: dep.identifier)):
-        overall_cartfile.write(f"{dep.line}\n")
+    for dep in list(sorted(dependencies.values(), key=lambda dep: dep[0].identifier)):
+        overall_cartfile.write(f"{dep[0].line}\n")
 
 # 4. run `carthage update --platform iOS [...]`
 call_chain =["carthage", "update", "--platform", "iOS"]
