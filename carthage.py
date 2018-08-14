@@ -2,9 +2,8 @@ from subprocess import call
 import re
 import json
 
-# cache for `dependencies` and for `discrepancies`
+# cache for `dependencies`
 dependencies = dict()
-discrepancies = list()
 
 # parses and represents a carthage dependency
 class Dependency(object):
@@ -14,22 +13,18 @@ class Dependency(object):
         match = re.match(r"^(?P<identifier>(github|git|binary)\s+\"[^/]+/(?:.+?)\")(?:\s+(?P<predicate>.+)?)?", line)
         self.identifier = match.group("identifier")
         self.predicate = match.group("predicate")
+    
+    def __str__(self):
+        return "`{}` defined `{}`.".format(self.origin, self.predicate)
 
 # function to cache one carthage dependency
 def cache_dependency(line, origin):
     parsed_dependency = Dependency(line, origin)
     identifier = parsed_dependency.identifier
     if identifier in dependencies: # cache hit
-        cached_dependency = dependencies[identifier]
-        differ = cached_dependency.predicate != parsed_dependency.predicate
-        if differ:
-            differ_reason = f"""
-    entries for {identifier} differ
-      => '{cached_dependency.origin}' defined '{cached_dependency.predicate}'
-      => '{parsed_dependency.origin}' defined '{parsed_dependency.predicate}'"""
-            discrepancies.append(differ_reason)
+        dependencies[identifier].append(parsed_dependency)
     else:
-        dependencies[identifier] = parsed_dependency
+        dependencies[identifier] = [parsed_dependency]
 
 # read in `CarthageConfig.json`
 carthage_config = json.load(open("./Carthage/CarthageConfig.json"))
@@ -37,7 +32,7 @@ carthage_config = json.load(open("./Carthage/CarthageConfig.json"))
 # 1. collecting all dependencies as specified in `CarthageConfig.json`
 print("1. collecting all dependencies as specified in `CarthageConfig.json`")
 
-# read in each `Cartfile` as specified in `CarthageConfig.json`
+# reading in each `Cartfile` as specified in `CarthageConfig.json`
 for cartfile_path in carthage_config["cartfiles"]:
     cartfile = open(cartfile_path).read()
     lines = [line.strip() for line in cartfile.splitlines()]
@@ -47,10 +42,25 @@ for cartfile_path in carthage_config["cartfiles"]:
 
 # 2. checking for conflicts
 print("2. checking for conflicts")
-if len(discrepancies) > 0:
-    for d in discrepancies:
-        print(d)
-    print("\n...please resolve conflicts first!")
+hasDiffer = False
+for identifier in dependencies:
+    children = dependencies[identifier]
+    if len(children) == 1:
+        continue
+    differ = False
+    first = children[0]
+    for i in range(1, len(children)):
+        current = children[i]
+        differ = first.predicate != current.predicate
+    if differ is True:
+        hasDiffer = True
+        print("entries for {} differ".format(identifier))
+        for c in children:
+            print("\t=> {}".format(c))
+        print("")
+
+if hasDiffer:
+    print("...please resolve conflicts first!")
     raise SystemExit
 print("...no conflicts found!")
 
