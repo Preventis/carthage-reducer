@@ -23,3 +23,7 @@ Some options can be specified in `CarthageConfig.json`.
 ## Hint
 
 In order to overcome the pain with adding each framework, which is used, to the base apps, we use `carthage-copy-frameworks`. [lvillani](https://github.com/lvillani) did an awesome job, [lvillani/carthage-copy-frameworks](https://github.com/lvillani/carthage-copy-frameworks).
+
+## Related
+
+We wrote an article on how we achieved a collection of modular components as building blocks for different mobile apps. With this small helper script we found a way to reduce our spent time on Carthage (cloning, building, waiting) significantly.
